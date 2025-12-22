@@ -1,0 +1,36 @@
+node_modules
+dist
+.DS_Store
+server/public
+vite.config.ts.*
+*.tar.gz
+
+# Replit files
+.config/
+.local/
+.replit
+replit.md
+attached_assets/
+
+# Environment variables (with secrets)
+.env
+.env.local
+.env.production
+.env.development
+.env.vercel
+
+# Google credentials (NEVER commit these!)
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!components.json
+!vercel.json
+
+# IDE
+.idea/
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
