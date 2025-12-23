@@ -1,5 +1,21 @@
 import { google } from 'googleapis';
-import { type Post } from '@shared/schema';
+
+// Post type for Vercel API
+interface Post {
+  rowId: string;
+  status: "Do akceptacji" | "Opublikuj" | "Opublikowano" | "Archiwum";
+  blogTitle?: string;
+  blogContent?: string;
+  blogContentHtml?: string;
+  facebookContent?: string;
+  instagramContent?: string;
+  imageUrl?: string;
+  imageUrl2?: string;
+  imageUrl3?: string;
+  publishedDate?: string;
+  statusWP?: string;
+  statusSM?: string;
+}
 
 export class GoogleSheetsService {
   private sheets: any;
@@ -12,7 +28,7 @@ export class GoogleSheetsService {
     if (credentials && this.spreadsheetId) {
       try {
         const parsedCredentials = JSON.parse(credentials);
-        
+
         // Validate that required fields exist
         if (!parsedCredentials.client_email || !parsedCredentials.private_key) {
           console.error('Google Service Account credentials are missing required fields (client_email, private_key)');
@@ -41,7 +57,7 @@ export class GoogleSheetsService {
     try {
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: this.spreadsheetId,
-        range: 'Artykuły!A:J', // Get data from "Artykuły" sheet, columns A to J
+        range: 'All posts with AI!A:N', // Get data from "All posts with AI" sheet, columns A to N
       });
 
       const rows = response.data.values;
@@ -60,7 +76,7 @@ export class GoogleSheetsService {
       for (let i = 1; i < rows.length; i++) {
         const row = rows[i];
         const rowDate = row[0] || ''; // Column A - data
-        
+
         if (rowDate === todayStr) {
           return {
             rowId: `ROW_${i + 1}`,
@@ -70,7 +86,9 @@ export class GoogleSheetsService {
             blogContentHtml: row[3] || '', // Column D - Blog Wordpress HTML (for preview)
             facebookContent: row[4] || '', // Column E - Post Facebook
             instagramContent: row[5] || '', // Column F - Post Instagram
-            imageUrl: row[6] || '', // Column G - Grafika
+            imageUrl: row[6] || '', // Column G - Grafika 1
+            imageUrl2: row[10] || '', // Column K - Grafika 2
+            imageUrl3: row[12] || '', // Column M - Grafika 3
             publishedDate: row[0] || '', // Column A - data
             statusWP: row[8] || '', // Column I - WordPress status
             statusSM: row[9] || '', // Column J - Social Media status
@@ -91,7 +109,7 @@ export class GoogleSheetsService {
     try {
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: this.spreadsheetId,
-        range: 'Artykuły!A:J', // Get data from "Artykuły" sheet, columns A to J
+        range: 'All posts with AI!A:N', // Get data from "All posts with AI" sheet, columns A to N
       });
 
       const rows = response.data.values;
@@ -114,7 +132,9 @@ export class GoogleSheetsService {
             blogContentHtml: row[3] || '', // Column D - Blog Wordpress HTML (for preview)
             facebookContent: row[4] || '', // Column E - Post Facebook
             instagramContent: row[5] || '', // Column F - Post Instagram
-            imageUrl: row[6] || '', // Column G - Grafika
+            imageUrl: row[6] || '', // Column G - Grafika 1
+            imageUrl2: row[10] || '', // Column K - Grafika 2
+            imageUrl3: row[12] || '', // Column M - Grafika 3
             publishedDate: row[0] || '', // Column A - data
             statusWP, // Column I - WordPress status
             statusSM, // Column J - Social Media status
@@ -137,7 +157,7 @@ export class GoogleSheetsService {
     try {
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: this.spreadsheetId,
-        range: 'Artykuły!A:J', // Get data from "Artykuły" sheet, columns A to J
+        range: 'All posts with AI!A:N', // Get data from "All posts with AI" sheet, columns A to N
       });
 
       const rows = response.data.values;
@@ -179,7 +199,9 @@ export class GoogleSheetsService {
             blogContentHtml: row[3] || '', // Column D - Blog Wordpress HTML (for preview)
             facebookContent: row[4] || '', // Column E - Post Facebook
             instagramContent: row[5] || '', // Column F - Post Instagram
-            imageUrl: row[6] || '', // Column G - Grafika
+            imageUrl: row[6] || '', // Column G - Grafika 1
+            imageUrl2: row[10] || '', // Column K - Grafika 2
+            imageUrl3: row[12] || '', // Column M - Grafika 3
             publishedDate: dateStr, // Column A - data
             statusWP, // Column I - WordPress status
             statusSM, // Column J - Social Media status
@@ -220,7 +242,7 @@ export class GoogleSheetsService {
 
       await this.sheets.spreadsheets.values.update({
         spreadsheetId: this.spreadsheetId,
-        range: `Artykuły!${sheetColumn}${rowNumber}`,
+        range: `All posts with AI!${sheetColumn}${rowNumber}`,
         valueInputOption: 'RAW',
         requestBody: {
           values: [[content]],
