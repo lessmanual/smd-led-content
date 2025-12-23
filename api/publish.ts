@@ -48,20 +48,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const wordpressUsername = process.env.WORDPRESS_WEBHOOK_USERNAME;
       const wordpressPassword = process.env.WORDPRESS_WEBHOOK_PASSWORD;
 
-      if (wordpressWebhookUrl && wordpressUsername && wordpressPassword) {
+      if (wordpressWebhookUrl) {
         try {
           // Extract row number from rowId (ROW_5 -> 5)
           const rowNumber = parseInt(rowId.replace('ROW_', ''));
 
-          // Create basic auth header
-          const basicAuth = Buffer.from(`${wordpressUsername}:${wordpressPassword}`).toString('base64');
+          // Build headers - auth is optional for n8n webhooks
+          const headers: Record<string, string> = {
+            'Content-Type': 'application/json'
+          };
+
+          // Only add auth if credentials are provided
+          if (wordpressUsername && wordpressPassword) {
+            const basicAuth = Buffer.from(`${wordpressUsername}:${wordpressPassword}`).toString('base64');
+            headers['Authorization'] = `Basic ${basicAuth}`;
+          }
 
           await fetch(wordpressWebhookUrl, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Basic ${basicAuth}`
-            },
+            headers,
             body: JSON.stringify({
               rowId,           // ROW_5 format
               rowNumber,       // 5 (just the number)
@@ -76,7 +81,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           // Don't fail the request if webhook fails
         }
       } else {
-        console.log("WordPress webhook not configured - missing URL or credentials");
+        console.log("WordPress webhook not configured - missing URL");
       }
     }
 
