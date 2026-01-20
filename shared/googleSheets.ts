@@ -15,6 +15,7 @@ interface Post {
   publishedDate?: string;
   statusWP?: string;
   statusSM?: string;
+  mainKeyword?: string;
 }
 
 export class GoogleSheetsService {
@@ -57,7 +58,7 @@ export class GoogleSheetsService {
     try {
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: this.spreadsheetId,
-        range: 'All posts with AI!A:N', // Get data from "All posts with AI" sheet, columns A to N
+        range: 'All posts with AI!A:O', // Get data from "All posts with AI" sheet, columns A to N
       });
 
       const rows = response.data.values;
@@ -92,6 +93,7 @@ export class GoogleSheetsService {
             publishedDate: row[0] || '', // Column A - data
             statusWP: row[8] || '', // Column I - WordPress status
             statusSM: row[9] || '', // Column J - Social Media status
+            mainKeyword: row[14] || '', // Column O - Main Keyword
           };
         }
       }
@@ -109,7 +111,7 @@ export class GoogleSheetsService {
     try {
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: this.spreadsheetId,
-        range: 'All posts with AI!A:N', // Get data from "All posts with AI" sheet, columns A to N
+        range: 'All posts with AI!A:O', // Get data from "All posts with AI" sheet, columns A to N
       });
 
       const rows = response.data.values;
@@ -138,6 +140,7 @@ export class GoogleSheetsService {
             publishedDate: row[0] || '', // Column A - data
             statusWP, // Column I - WordPress status
             statusSM, // Column J - Social Media status
+            mainKeyword: row[14] || '', // Column O - Main Keyword
           });
         }
       }
@@ -157,7 +160,7 @@ export class GoogleSheetsService {
     try {
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: this.spreadsheetId,
-        range: 'All posts with AI!A:N', // Get data from "All posts with AI" sheet, columns A to N
+        range: 'All posts with AI!A:O', // Get data from "All posts with AI" sheet, columns A to N
       });
 
       const rows = response.data.values;
@@ -205,6 +208,7 @@ export class GoogleSheetsService {
             publishedDate: dateStr, // Column A - data
             statusWP, // Column I - WordPress status
             statusSM, // Column J - Social Media status
+            mainKeyword: row[14] || '', // Column O - Main Keyword
           });
         }
       }

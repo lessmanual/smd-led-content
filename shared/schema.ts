@@ -14,6 +14,7 @@ export const postSchema = z.object({
   publishedDate: z.string().optional(),
   statusWP: z.string().optional(), // Column I - WordPress status
   statusSM: z.string().optional(), // Column J - Social Media status
+  mainKeyword: z.string().optional(), // Column O - Main Keyword
 });
 
 export const updateCellSchema = z.object({
